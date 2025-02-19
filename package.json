@@ -1,6 +1,6 @@
 {
   "name": "deno2node",
-  "version": "1.9.0",
+  "version": "1.15.0",
   "description": "`tsc` replacement for transpiling Deno libraries to run on Node.js.",
   "type": "module",
   "bin": {
@@ -14,22 +14,23 @@
   },
   "files": [
     "lib/",
+    "tsconfig.json",
     "!lib/**/*.test.*"
   ],
   "scripts": {
     "fmt": "deno fmt",
     "lint": "deno lint",
     "prepare": "src/cli.ts",
+    "postprepare": "node --test lib/",
     "test": "deno test --allow-read=.",
     "dependencies": "scripts/pretest.ts",
-    "postprepare": "fdt lib/**/*.test.js",
     "clean": "git clean -fXde !node_modules/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fromdeno/deno2node.git"
+    "url": "git+https://github.com/wojpawlik/deno2node.git"
   },
-  "homepage": "https://fromdeno.org",
+  "homepage": "https://t.me/fromdeno",
   "keywords": [
     "typescript",
     "transpile",
@@ -43,13 +44,11 @@
     "node": ">=14.13.1"
   },
   "dependencies": {
-    "@deno/shim-deno-test": "^0.4.0",
-    "ts-morph": "^19.0.0"
+    "ts-morph": "^25.0.1"
   },
   "devDependencies": {
-    "@fromdeno/test": "^0.4.0",
     "@types/node": "^18.15.11",
-    "deno-bin": "~1.35.0",
+    "deno-bin": "~2.2.0",
     "fast-check": "^3.10.0"
   }
 }

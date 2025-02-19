@@ -1,22 +1,28 @@
-import assert from "node:assert/strict";
+import * as assert from "node:assert/strict";
+import test from "node:test";
 import { Project, ts } from "../deps.deno.ts";
-import { vendorFile } from "./vendor.ts";
+import { vendorSpecifiers } from "./vendor.ts";
 
-Deno.test(function vendoring() {
+test(function vendoring() {
   const project = new Project({
     tsConfigFilePath: "tsconfig.json",
     skipAddingFilesFromTsConfig: true,
   });
   const vendorDir = project.createDirectory("src/vendor");
-  const file = project.addSourceFileAtPath("src/deps.deno.ts");
+  const file = project.createSourceFile(
+    "src/deps.deno.ts",
+    'export * from "https://deno.land/x/ts_morph/mod.ts"',
+    { overwrite: true },
+  );
   const exportDeclaration =
     file.getChildrenOfKind(ts.SyntaxKind.ExportDeclaration)[0];
 
-  vendorFile(vendorDir.getPath())(file);
+  vendorSpecifiers(vendorDir.getPath())(file);
   const specifierValue = exportDeclaration.getModuleSpecifierValue()!;
   assert.match(specifierValue, /^.\/vendor\//);
+  assert.match(specifierValue, /\.js$/);
 
   // test idempotence
-  vendorFile(vendorDir.getPath())(file);
+  vendorSpecifiers(vendorDir.getPath())(file);
   assert.equal(exportDeclaration.getModuleSpecifierValue(), specifierValue);
 });

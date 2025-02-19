@@ -22,4 +22,4 @@ jobs:
     - run: git diff --no-index lib/ nodejs/
 
     - run: deno test --allow-read=. src/
-    - run: fdt lib/**/*.test.js
+    - run: node --test lib/

@@ -1,4 +1,5 @@
-import fc from "https://esm.sh/fast-check@3.10.0";
+import fc from "fast-check";
+import test from "node:test";
 import {
   name,
   services,
@@ -21,7 +22,7 @@ const urlSegments = fc.tuple(
   fc.webQueryParameters().map((s) => s ? `?${s}` : ""),
 );
 
-Deno.test(function localSpecifiers() {
+test(function localSpecifiers() {
   fc.assert(
     fc.property(
       relativePath,
@@ -39,7 +40,7 @@ Deno.test(function localSpecifiers() {
   );
 });
 
-Deno.test(function remoteSpecifiers() {
+test(function remoteSpecifiers() {
   fc.assert(
     fc.property(urlSegments, (segments) => {
       const [, scopedPackage, , path] = segments;
