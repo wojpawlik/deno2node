@@ -20,7 +20,7 @@ test(function vendoring() {
   vendorSpecifiers(vendorDir.getPath())(file);
   const specifierValue = exportDeclaration.getModuleSpecifierValue()!;
   assert.match(specifierValue, /^.\/vendor\//);
-  assert.match(specifierValue, /\.js$/);
+  assert.match(specifierValue, /\.ts$/);
 
   // test idempotence
   vendorSpecifiers(vendorDir.getPath())(file);

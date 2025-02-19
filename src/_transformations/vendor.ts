@@ -1,28 +1,19 @@
 import type { Context } from "../context.ts";
-import { Node, SourceFile } from "../deps.deno.ts";
+import type { SourceFile } from "../deps.deno.ts";
+import { replaceSpecifiers } from "./specifiers.ts";
 
 const https = /^https:\//;
 
 /**
- * Rewrites specifiers in `sourceFile` to point into  the specified `vendorDir`.
- * @param vendorDir - absolute path
+ * Rewrites `https:` specifiers in `sourceFile`
+ * to point into the specified `vendorDir`.
  */
 export const vendorSpecifiers =
   (vendorDir: string) => (sourceFile: SourceFile) => {
-    for (const statement of sourceFile.getStatements()) {
-      if (
-        Node.isImportDeclaration(statement) ||
-        Node.isExportDeclaration(statement)
-      ) {
-        const oldSpecifierValue = statement.getModuleSpecifierValue();
-        if (oldSpecifierValue === undefined) continue;
-        if (!https.test(oldSpecifierValue)) continue;
-        const newSpecifierValue = "./" + sourceFile.getRelativePathTo(
-          oldSpecifierValue.replace(https, vendorDir),
-        ).replace(/tsx?$/, "js");
-        statement.setModuleSpecifier(newSpecifierValue);
-      }
-    }
+    const relativePath = "./" + sourceFile.getRelativePathTo(vendorDir);
+    replaceSpecifiers(sourceFile, (specifier) => {
+      return specifier.replace(https, relativePath);
+    });
   };
 
 export function vendorEverything(ctx: Context) {

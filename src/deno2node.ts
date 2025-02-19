@@ -1,6 +1,6 @@
 import { shimEverything } from "./_transformations/shim.ts";
 import { vendorEverything } from "./_transformations/vendor.ts";
-import { type Context } from "./context.ts";
+import type { Context } from "./context.ts";
 
 /**
  * Attempts to transform arbitrary `ctx.project` into a valid Node.js project:
