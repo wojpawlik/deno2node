@@ -32,8 +32,7 @@ test(function localSpecifiers() {
       (path, ext, oldRuntime, newRuntime) => {
         const fn = transpileSpecifier(oldRuntime, newRuntime);
         return (
-          fn(`${path}.${oldRuntime}.m${ext}`) === `${path}.${newRuntime}.mjs` &&
-          fn(`${path}.${oldRuntime}.${ext}`) === `${path}.${newRuntime}.js`
+          fn(`${path}.${oldRuntime}.${ext}`) === `${path}.${newRuntime}.${ext}`
         );
       },
     ),

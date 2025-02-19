@@ -10,15 +10,12 @@ const url = re.tag()`^${re.union(services)}(${name})${version}?(${path})?.*$`;
 export const transpileHttpsImport = (specifier: string) =>
   specifier.replace(url, "$1$2");
 
-export const transpileExtension = (specifier: string) =>
-  specifier.replace(/[jt]sx?$/i, "js");
-
 const isRelative = (specifier: string) => /^\.\.?\//.test(specifier);
 
 export const transpileSpecifier =
   (oldRuntime: string, newRuntime: string) => (specifier: string) =>
     isRelative(specifier)
-      ? transpileExtension(specifier).replace(
+      ? specifier.replace(
         `.${oldRuntime}.`,
         `.${newRuntime}.`,
       )

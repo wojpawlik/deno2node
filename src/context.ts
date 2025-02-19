@@ -6,12 +6,11 @@ import {
 import { type Config, parse } from "./config.ts";
 import { Project, ts } from "./deps.deno.ts";
 
-const compilerOptions: ts.CompilerOptions = {
-  // footguns
-  removeComments: false,
+const defaultCompilerOptions: ts.CompilerOptions = {
   // Deno defaults
   strict: true,
   useDefineForClassFields: true,
+  rewriteRelativeImportExtensions: true,
 };
 
 export interface Options {
@@ -32,7 +31,7 @@ export class Context {
   constructor(options: Options) {
     const { tsConfigFilePath } = options;
     this.project = new Project({
-      compilerOptions,
+      defaultCompilerOptions,
       ...options,
     });
     const fs = this.project.getFileSystem();
@@ -46,7 +45,7 @@ export class Context {
     this.config = parse(result.config.deno2node ?? {});
   }
 
-  resolve(...pathSegments: string[]) {
+  resolve(...pathSegments: string[]): string {
     return path.join(this.baseDir, ...pathSegments);
   }
 
