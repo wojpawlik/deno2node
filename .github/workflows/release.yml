@@ -13,9 +13,10 @@ jobs:
   npm:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: npm ci --ignore-scripts
     - run: npm run prepare
+
     - name: Publish to npm
       run: |
         npm config set //registry.npmjs.org/:_authToken '${NPM_TOKEN}'
@@ -25,3 +26,5 @@ jobs:
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         NPM_CONFIG_PROVENANCE: true
+    - name: Publish to JSR
+      run: npx deno publish --allow-dirty --set-version="${GITHUB_REF_NAME/v/}"

@@ -1,6 +1,15 @@
 {
+  "name": "@wojpawlik/deno2node",
+  "exports": "./mod.ts",
+  "publish": {
+    "exclude": [
+      ".*",
+      "scripts/",
+      "src/**/*.test.ts"
+    ]
+  },
+
   "lock": false,
-  "unstable": ["byonm"],
   "fmt": { "proseWrap": "preserve" },
   "exclude": ["lib/", "package-lock.json"]
 }
