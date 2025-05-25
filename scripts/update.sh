@@ -14,10 +14,8 @@ npm query --expect-results '#ts-morph:outdated(major)' &>/dev/null || {
   exit 0
 }
 
-NPM_CONFIG_PACKAGE_LOCK_ONLY=1 \
-npm install --save-dev --save-prefix='~' deno-bin@latest
 npm install-test ts-morph@latest
-! git diff --quiet src/deps.deno.ts
+npm install-test --save-dev --save-prefix='~' deno@latest
 
 tsVersion="$(scripts/ts-version.ts)" || exit 0
 npm run prepare
