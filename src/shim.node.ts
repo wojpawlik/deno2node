@@ -13,5 +13,5 @@ export const Deno = {
 };
 
 export async function fetch(fileUrl: URL) {
-  return new Response(await readFile(fileUrl));
+  return new Response(await readFile(fileUrl) as ArrayBufferView<ArrayBuffer>);
 }
