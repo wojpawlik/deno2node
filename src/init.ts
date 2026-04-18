@@ -6,15 +6,18 @@ const gitignore = "/lib/\n/node_modules/\n/src/vendor/";
 const denoJson = '{ "exclude": ["lib/"] }';
 
 async function download(url: URL, target: string) {
+  if (url.protocol === "file:") {
+    return await fs.copyFile(url, target, fs.constants.COPYFILE_EXCL);
+  }
   const response = await fetch(url);
   await fs.writeFile(target, await response.text(), { flag: "wx" });
 }
 
 export async function getVersion(): Promise<string> {
-  const packageUrl = new URL("../package.json", import.meta.url);
-  const response = await fetch(packageUrl);
-  const { version } = await response.json();
-  return version;
+  const { default: pkg } = await import("../package.json" as string, {
+    with: { type: "json" },
+  });
+  return pkg.version;
 }
 
 async function createPackageJson() {
@@ -33,7 +36,7 @@ async function createPackageJson() {
       "lint": "deno lint",
       "test": "deno test",
       "prepare": "deno2node",
-      "postprepare": "node --test lib/",
+      "postprepare": "node --test lib/**/*.test.js",
       "clean": "git clean -fXde !node_modules/",
     },
     "devDependencies": {
@@ -57,7 +60,6 @@ export async function initializeProject() {
   ]);
 }
 
-// @ts-ignore not available on Node.js: https://github.com/nodejs/modules/issues/274
 if (import.meta.main) {
   await initializeProject();
 }

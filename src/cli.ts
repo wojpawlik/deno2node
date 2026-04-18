@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run --no-prompt --allow-read=. --allow-write=lib/
 import { existsSync } from "node:fs";
-import * as process from "node:process";
+import process from "node:process";
 import { ts } from "./deps.deno.ts";
 import { getHelpText } from "./help.ts";
 import { getVersion, initializeProject } from "./init.ts";
@@ -8,8 +8,6 @@ import { Context, deno2node, emit } from "./mod.ts";
 
 const args = process.argv.slice(2);
 const { options, fileNames, errors } = ts.parseCommandLine(args);
-const tsConfigFilePath = options.project ??
-  ts.findConfigFile(process.cwd(), existsSync);
 
 if (errors.length) {
   for (const error of errors) {
@@ -33,6 +31,9 @@ if (options.init) {
   await initializeProject();
   process.exit(0);
 }
+
+const tsConfigFilePath = options.project ??
+  ts.findConfigFile(process.cwd(), existsSync);
 
 const ctx = new Context({
   tsConfigFilePath,

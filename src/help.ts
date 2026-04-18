@@ -1,3 +1,5 @@
+import process from "node:process";
+
 export function getHelpText(version: string) {
   return `\
 deno2node: Compile Deno code for Node - Version ${version}
@@ -26,7 +28,9 @@ You can learn about the compiler options at https://aka.ms/tsc
 `;
 }
 
-export const useColors = Deno.stdout.isTerminal() && !Deno.noColor;
+const { Deno } = globalThis as unknown as { Deno?: { noColor: boolean } };
+const noColor = Deno?.noColor ?? Boolean(process.env.NO_COLOR);
+export const useColors = !noColor && Boolean(process.stdout.isTTY);
 
 function bold(text: string) {
   return format(text, 1);
