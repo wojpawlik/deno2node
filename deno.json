@@ -1,6 +1,9 @@
 {
   "name": "@wojpawlik/deno2node",
-  "exports": "./mod.ts",
+  "exports": {
+    ".": "./mod.ts",
+    "./create": "./src/init.ts"
+  },
   "publish": {
     "exclude": [
       ".*",

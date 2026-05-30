@@ -11,20 +11,16 @@ permissions:
 
 jobs:
   npm:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - run: npm ci --ignore-scripts
     - run: npm run prepare
 
     - name: Publish to npm
       run: |
-        npm config set //registry.npmjs.org/:_authToken '${NPM_TOKEN}'
         [[ "$GITHUB_REF_NAME" =~ - ]] && npm config set tag=next
         npm pkg set version="${GITHUB_REF_NAME/v/}"
         npm publish --ignore-scripts
-      env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        NPM_CONFIG_PROVENANCE: true
     - name: Publish to JSR
       run: npx deno publish --allow-dirty --set-version="${GITHUB_REF_NAME/v/}"
